@@ -3,10 +3,12 @@ public class CaesarCipher{
     public CaesarCipher( int key){
         this.key= key%26;
     }
-    public String encrypt(String text){
+    public String encrypt(String plaintext){
         String ergebnis="";
-        for(int i=0; i<text.length(); i++){
-            char c = text.charAt(i);
+
+        for(int i=0; i<plaintext.length(); i++){
+            char c = plaintext.charAt(i);
+
             if(c>='A'&& c<='Z'){
                 ergebnis= ergebnis + (char) ((c-'A'+this.key)%26+'A');
 
@@ -18,17 +20,31 @@ public class CaesarCipher{
         }
         return ergebnis;
     }
-    public String decrypt(String original){
+    public String decrypt(String ciphertext){
         CaesarCipher invers= new CaesarCipher (26 - this.key);
-        return invers.encrypt(original);
+        return invers.encrypt(ciphertext);
+    }
+    public void bruteForceAttack(String ciphertext){
+        System.out.println("--- Brute-Force-Angriff ---");
 
+        for(int testkey=0; testkey<26 ; testkey++){
+        CaesarCipher testCipher= new CaesarCipher(testkey);
+        String kandidat= testCipher.decrypt(ciphertext);
+        System.out.println("Schluessel " + testkey + ":" + kandidat);
+    }
     }
     public static void main(String[] args){
         CaesarCipher cipher= new CaesarCipher(3);
+
         String chiffre= cipher.encrypt("Hallo Welt");
         System.out.println(chiffre);
+
         String normal= cipher.decrypt(chiffre);
-        System.out.println(normal);
+        System.out.println("Entschluesselt: " + normal);
+
+        System.out.println();
+        cipher.bruteForceAttack(chiffre);
+
 
     }
 }
